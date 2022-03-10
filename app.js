@@ -43,6 +43,25 @@ app.get('/', function (req, res) {
 // });
 
 
+app.post('/send-message', function (req, res) {
+    const phone = req.body.phone;
+    const message = req.body.message;
+
+    client.sendMessage(phone, message).then(response => {
+        res.status(200).json({
+            status: true,
+            response
+        });
+    }).catch(err => {
+        res.status(500).json({
+            status: false,
+            response: err
+        });
+    });
+});
+
+
+
 io.on('connection', function (socket) {
     socket.emit('message', 'Connecting....');
 
@@ -101,7 +120,28 @@ io.on('connection', function (socket) {
     });
 
     client.on('message', message => {
-        socket.emit('message', message.body);
+
+        // console.log(message);
+        const msg = "ada pesan dari " + message.from + " pesan = " + message.body
+
+        socket.emit('message', msg);
+
+        switch (message.body) {
+            case 'Cuk':
+                message.reply('Haaaaah??? Opooooo?');
+
+                break;
+            case 'jam':
+
+                message.reply('Delok Dewe nang Hape');
+
+                break;
+
+            default:
+                message.reply('Koe nulis opo cuk?');
+
+                break;
+        }
 
     });
 });

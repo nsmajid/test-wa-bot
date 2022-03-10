@@ -27,7 +27,8 @@ if (fs.existsSync(SESSION_FILE_PATH)) {
 const client = new Client({
     authStrategy: new LegacySessionAuth({
         session: sessionData
-    })
+    }),
+    puppeteer: { args: ["--no-sandbox"] }
 });
 client.initialize();
 
